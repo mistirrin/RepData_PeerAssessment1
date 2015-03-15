@@ -4,6 +4,49 @@ output:
   html_document:
     keep_md: true
 ---
+<<<<<<< HEAD
+```{r echo = FALSE}
+library(ggplot2)
+library(dplyr)
+opts_chunk$set(echo = TRUE)
+```
+
+## Loading and preprocessing the data
+```{r}
+data = read.csv(file="activity.csv", header=TRUE,)
+```
+
+## What is mean total number of steps taken per day?
+```{r}
+by_day <- group_by(data, date)
+by_day_summary <- summarize(group_by(data, date), total = sum(steps,na.rm=TRUE))
+by_day_summary
+
+qplot(by_day_summary$total, binwidth=3000)
+```
+
+Steps per day: Mean
+```{r}
+mean(by_day_summary$total)
+```
+
+Steps per day: Median
+```{r}
+median(by_day_summary$total)
+```
+
+
+## What is the average daily activity pattern?
+```{r}
+by_interval <- aggregate(steps ~ interval, data, mean)
+qplot(y=by_interval$steps, x=by_interval$interval, geom="line")
+```
+
+5 minute interval with most steps averaged across all days is
+```{r}
+by_interval[which.max(x=by_interval$steps),1]
+```
+=======
 
 
 ## Loading and preprocessing the data
@@ -16,10 +59,41 @@ output:
 
 ## What is the average daily activity pattern?
 
+>>>>>>> 80edf39c3bb508fee88e3394542f967dd3fd3270
 
 
 ## Imputing missing values
 
+<<<<<<< HEAD
+Number of rows with missing values
+```{r}
+dim(data[data$steps == "NA",])[1]
+```
+
+Alternate dataset
+```{r}
+alternate_data <- data
+for (i in 1:nrow(alternate_data)) {
+  if (is.na(alternate_data[i,"steps"])) {
+    alternate_data[i,"steps"] <- mean(data[data$date==alternate_data[i,"date"],"steps"])
+  }
+}
+
+qplot(by_day_summary$total, binwidth=3000)
+```
+
+## Are there differences in activity patterns between weekdays and weekends?
+```{r}
+alternate_data <- mutate(alternate_data, day = weekdays(as.Date(data$date,format="%Y-%m-%d")))
+alternate_data[alternate_data$day == "Saturday" | alternate_data$day == "Sunday", "day"] <- "weekend" 
+alternate_data[alternate_data$day != "weekend", "day"] <- "weekday" 
+alternate_data$day <- as.factor(alternate_data$day)
+
+by_interval_alternate <- aggregate(steps ~ interval + day, alternate_data, mean)
+qplot(y=steps, x=interval, data= by_interval_alternate, geom="line", facets=day ~ .)
+```
+=======
 
 
 ## Are there differences in activity patterns between weekdays and weekends?
+>>>>>>> 80edf39c3bb508fee88e3394542f967dd3fd3270
